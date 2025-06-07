@@ -1,12 +1,19 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "dist/bookgen.client/server/server.mjs", "use": "@vercel/node" },
-    { "src": "dist/bookgen.client/browser/**/*", "use": "@vercel/static" }
-  ],
   "routes": [
-    { "src": "/locales", "dest": "http://13.60.42.203:8080/locales", "methods": ["GET"] },
-    { "src": "/books", "dest": "http://13.60.42.203:8080/books", "methods": ["POST"] },
-    { "src": "/(.*)", "dest": "dist/bookgen.client/server/server.mjs" }
+    { 
+        "src": "/locales", 
+        "dest": "http://13.60.42.203:8080/locales", 
+        "methods": ["GET"] 
+    },
+    { 
+        "src": "/books", 
+        "dest": "http://13.60.42.203:8080/books", 
+        "methods": ["POST"] 
+    },
+    { 
+        "src": "/(.*)", 
+        "dest": "api/server"
+    }
   ]
 }

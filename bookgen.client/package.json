@@ -5,8 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "build:ssr": "ng build --configuration production && ng run bookgen.client:server:production",
     "serve:ssr:bookgen.client": "node dist/bookgen.client/server/server.mjs"
   },
   "private": true,
