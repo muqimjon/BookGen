@@ -22,3 +22,26 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+
+  dockerize:
+    name: Dockerize backend
+    needs: build
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Login to DockerHub
+      run: |
+        echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+    - name: Build and push
+      run: |
+        docker build --tag $DOCKER_USERNAME/bookgen --file ./BookGen.Server/Dockerfile .
+        docker push $DOCKER_USERNAME/bookgen
