@@ -1,37 +1,35 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ControlsComponent } from './core/features/controls/controls.component';
+import { BookListComponent } from './core/features/booklist/booklist.component';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [CommonModule, ControlsComponent, BookListComponent],
+  template: `
+    <div class="container">
+      <h1 class="my-4 text-center">📚 Book Generator</h1>
+      <app-controls (paramsChanged)="onParamsChanged($event)"></app-controls>
+      <app-book-list
+        [region]="region"
+        [seed]="seed"
+        [likes]="likes"
+        [reviews]="reviews">
+      </app-book-list>
+    </div>
+  `
 })
-export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+export class AppComponent {
+  region = 'en_US';
+  seed = 123;
+  likes = 5;
+  reviews = 5;
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getForecasts();
+  onParamsChanged(params: { region: string; seed: number; likes: number; reviews: number }) {
+    this.region = params.region;
+    this.seed = params.seed;
+    this.likes = params.likes;
+    this.reviews = params.reviews;
   }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  title = 'bookgen.client';
 }
