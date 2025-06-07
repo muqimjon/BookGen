@@ -1,15 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dist/bookgen.client/server/server.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/bookgen.client/browser/**/*",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/locales",
