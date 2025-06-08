@@ -33,7 +33,7 @@ public class BookService
                 Publisher = faker.Company.CompanyName(),
                 Likes = GetProbabilisticValue(request.LikesAvg),
                 Reviews = GetProbabilisticValue(request.ReviewsAvg),
-                Description = faker.Lorem.Paragraph(9),
+                Description = faker.Lorem.Paragraph(3),
                 CoverImageUrl = $"https://picsum.photos/seed/{seed}/200/300"
             });
         }

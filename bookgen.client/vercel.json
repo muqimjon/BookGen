@@ -1,19 +1,7 @@
 {
-  "version": 2,
-  "routes": [
-    { 
-        "src": "/locales", 
-        "dest": "http://13.60.42.203:8080/locales", 
-        "methods": ["GET"] 
-    },
-    { 
-        "src": "/books", 
-        "dest": "http://13.60.42.203:8080/books", 
-        "methods": ["POST"] 
-    },
-    { 
-        "src": "/(.*)", 
-        "dest": "api/server"
-    }
-  ]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }
