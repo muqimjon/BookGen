@@ -19,21 +19,26 @@ public class BookService
         for (int i = 0; i < pageSize; i++)
         {
             var index = (request.Page - 1) * pageSize + i + 1;
+            var title = faker.Lorem.Sentence(3);
+            var author = faker.Name.FullName();
+
+            var seed = (title + author).GetHashCode().ToString();
+
             books.Add(new Book
             {
                 Index = index,
                 ISBN = faker.Random.Replace("###-#-##-######-#"),
-                Title = faker.Lorem.Sentence(3),
-                Author = faker.Name.FullName(),
+                Title = title,
+                Author = author,
                 Publisher = faker.Company.CompanyName(),
                 Likes = GetProbabilisticValue(request.LikesAvg),
-                Reviews = GetProbabilisticValue(request.ReviewsAvg)
+                Reviews = GetProbabilisticValue(request.ReviewsAvg),
+                Description = faker.Lorem.Paragraph(9),
+                CoverImageUrl = $"https://picsum.photos/seed/{seed}/200/300"
             });
         }
-
         return books;
     }
-
     private static int GetProbabilisticValue(double avg)
     {
         int floor = (int)Math.Floor(avg);

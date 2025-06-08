@@ -1,35 +1,91 @@
 <div class="container book-list-container">
+  <div class="d-flex justify-content-between mb-3">
+    <button (click)="exportToCsv()" class="btn btn-primary">Export to CSV</button>
+    <button (click)="toggleView()" class="btn btn-secondary">
+      {{ isGalleryView() ? 'Table View' : 'Gallery View' }}
+    </button>
+  </div>
+
   <div class="book-list" (scroll)="onScroll($event)">
     @if (books().length === 0 && !isLoading()) {
       <p class="text-muted text-center py-3">No books found</p>
     }
 
-    <table class="table table-striped table-hover align-middle">
-      <thead class="table-light sticky-top">
-        <tr>
-          <th>Index</th>
-          <th>ISBN</th>
-          <th>Title</th>
-          <th>Author(s)</th>
-          <th>Publisher</th>
-          <th>Likes</th>
-          <th>Reviews</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (book of books(); track book.index) {
+    @if (!isGalleryView()) {
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-light sticky-top">
           <tr>
-            <td>{{ book.index }}</td>
-            <td>{{ book.isbn }}</td>
-            <td>{{ book.title }}</td>
-            <td>{{ book.authors.join(', ') }}</td>
-            <td>{{ book.publisher }}</td>
-            <td>{{ book.likes | number: '1.1-1' }}</td>
-            <td>{{ book.reviews | number: '1.1-1' }}</td>
+            <th>Index</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th>Publisher</th>
+            <th>Likes</th>
+            <th>Reviews</th>
           </tr>
+        </thead>
+        <tbody>
+          @for (book of books(); track book.isbn) {
+            <tr (click)="openDetails(book)" style="cursor: pointer;">
+              <td>{{ book.index }}</td>
+              <td>{{ book.isbn }}</td>
+              <td>{{ book.title }}</td>
+              <td>{{ book.authors }}</td>
+              <td>{{ book.publisher }}</td>
+              <td>{{ book.likes }}</td>
+              <td>{{ book.reviews }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @if (isGalleryView()) {
+      <div class="row">
+        @for (book of books(); track book.isbn) {
+          <div class="col-md-3 mb-3">
+            <div class="card h-100" (click)="openDetails(book)" style="cursor: pointer;">
+              <img [src]="book.coverImageUrl || 'assets/placeholder.jpg'" class="card-img-top" alt="{{ book.title }}" style="height: 200px; object-fit: cover;">
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">Author(s): {{ book.authors }}</p>
+              </div>
+            </div>
+          </div>
         }
-      </tbody>
-    </table>
+      </div>
+    }
+
+    @if (selectedBook()) {
+      <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{ selectedBook()?.title }}</h5>
+              <button type="button" class="btn-close" (click)="closeDetails()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <img [src]="selectedBook()?.coverImageUrl || 'assets/placeholder.jpg'" class="img-fluid" alt="{{ selectedBook()?.title }}" style="max-height: 300px; object-fit: cover;">
+                </div>
+                <div class="col-md-8">
+                  <p><strong>ISBN:</strong> {{ selectedBook()?.isbn }}</p>
+                  <p><strong>Author(s):</strong> {{ selectedBook()?.authors }}</p>
+                  <p><strong>Publisher:</strong> {{ selectedBook()?.publisher }}</p>
+                  <p><strong>Likes:</strong> {{ selectedBook()?.likes }}</p>
+                  <p><strong>Reviews:</strong> {{ selectedBook()?.reviews }}</p>
+                  <p><strong>Description:</strong> {{ selectedBook()?.description }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeDetails()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
 
     @if (isLoading()) {
       <div class="text-center text-secondary py-3">

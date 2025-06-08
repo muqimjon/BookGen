@@ -59,6 +59,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/bookgen
-            docker-compose pull
+            docker compose pull
             docker rmi $(docker images --quiet --filter dangling=true)
-            docker-compose up --detach
+            docker compose up --detach
