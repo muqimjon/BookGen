@@ -27,17 +27,15 @@ jobs:
     name: Dockerize backend
     needs: build
     runs-on: ubuntu-latest
-
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
     - name: Login to DockerHub
       run: |
         echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
@@ -45,3 +43,22 @@ jobs:
       run: |
         docker build --tag $DOCKER_USERNAME/bookgen --file ./BookGen.Server/Dockerfile .
         docker push $DOCKER_USERNAME/bookgen
+
+  deploy:
+    name: Deploy
+    needs: dockerize
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into AWS Ubuntu Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ~/bookgen
+            docker-compose pull
+            docker rmi $(docker images --quiet --filter dangling=true)
+            docker-compose up --detach
