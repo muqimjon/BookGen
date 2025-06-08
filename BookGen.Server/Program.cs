@@ -30,7 +30,7 @@ app.UseCors(policy => policy.AllowAnyOrigin()
 
 app.UseForwardedHeaders();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

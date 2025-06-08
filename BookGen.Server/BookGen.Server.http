@@ -1,6 +1,6 @@
 @BookGen.Server_HostAddress = http://localhost:5108
 
-GET {{BookGen.Server_HostAddress}}/weatherforecast/
+GET {{BookGen.Server_HostAddress}}/locales/
 Accept: application/json
 
 ###
