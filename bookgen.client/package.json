@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production",
-    "build:ssr": "ng build --configuration production && ng run bookgen.client:server:production",
+    "build": "npx ng build --configuration production",
+    "build:ssr": "npx ng build --configuration production && npx ng run bookgen.client:server:production",
     "serve:ssr:bookgen.client": "node dist/bookgen.client/server/server.mjs"
   },
   "private": true,
